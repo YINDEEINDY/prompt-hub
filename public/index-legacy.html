@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧠 Prompt Engineering Patterns — Ultimate Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-dark: #0a0a0f;
+  --bg-card: #12121a;
+  --bg-card-hover: #1a1a28;
+  --accent-1: #6366f1;
+  --accent-2: #8b5cf6;
+  --accent-3: #ec4899;
+  --accent-4: #f59e0b;
+  --accent-5: #10b981;
+  --accent-6: #06b6d4;
+  --text-primary: #e8e8f0;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --border: #1e1e2e;
+  --glow-1: rgba(99, 102, 241, 0.15);
+  --glow-2: rgba(139, 92, 246, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans Thai', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* Animated background */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(99,102,241,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(236,72,153,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(16,185,129,0.05) 0%, transparent 50%);
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 60px 20px 40px;
+  position: relative;
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: 6px 18px;
+  border: 1px solid var(--accent-2);
+  border-radius: 50px;
+  font-size: 0.75rem;
+  color: var(--accent-2);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  animation: fadeInDown 0.8s ease;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, #6366f1, #ec4899, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+  animation: fadeInUp 0.8s ease;
+}
+
+.hero p {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  max-width: 700px;
+  margin: 0 auto;
+  animation: fadeInUp 1s ease;
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 30px 0 40px;
+  padding: 0 10px;
+}
+
+.nav-tab {
+  padding: 10px 20px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: 'Noto Sans Thai', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.nav-tab:hover, .nav-tab.active {
+  border-color: var(--accent-1);
+  color: var(--accent-1);
+  background: var(--glow-1);
+  transform: translateY(-2px);
+}
+
+/* Section */
+.section {
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+
+.section.active { display: block; }
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.section-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+}
+
+/* Framework Cards */
+.framework-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.fw-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.fw-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--card-accent, var(--accent-1)), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.fw-card:hover {
+  border-color: var(--card-accent, var(--accent-1));
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.fw-card:hover::before { opacity: 1; }
+
+.fw-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.fw-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.fw-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.fw-acronym {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.fw-desc {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  margin-bottom: 18px;
+  line-height: 1.8;
+}
+
+.fw-components {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.fw-comp {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(99,102,241,0.1);
+  color: var(--accent-1);
+  border: 1px solid rgba(99,102,241,0.2);
+}
+
+.fw-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.fw-meta-item {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.fw-meta-item span {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Rating */
+.rating {
+  display: flex;
+  gap: 3px;
+}
+
+.rating-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.rating-dot.filled {
+  background: var(--accent-4);
+  box-shadow: 0 0 6px rgba(245,158,11,0.4);
+}
+
+/* Comparison Table */
+.compare-wrapper {
+  overflow-x: auto;
+  margin: 20px 0;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.compare-table th {
+  background: var(--bg-card);
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 700;
+  color: var(--accent-1);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+.compare-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+
+.compare-table tr:hover td {
+  background: var(--bg-card-hover);
+}
+
+.badge-best {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(16,185,129,0.15);
+  color: var(--accent-5);
+  border: 1px solid rgba(16,185,129,0.3);
+}
+
+.badge-good {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(245,158,11,0.15);
+  color: var(--accent-4);
+  border: 1px solid rgba(245,158,11,0.3);
+}
+
+.badge-ok {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(107,114,128,0.15);
+  color: var(--text-muted);
+  border: 1px solid rgba(107,114,128,0.3);
+}
+
+/* Code Block */
+.code-block {
+  background: #0d0d14;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 16px 0;
+  overflow-x: auto;
+  position: relative;
+}
+
+.code-block pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: #c9d1d9;
+}
+
+.code-label {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.xml-tag { color: #7ee787; }
+.xml-attr { color: #d2a8ff; }
+.xml-val { color: #a5d6ff; }
+.comment { color: #6b7280; font-style: italic; }
+.keyword { color: #ff7b72; }
+.string { color: #a5d6ff; }
+
+/* Insight Box */
+.insight-box {
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(236,72,153,0.05));
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin: 24px 0;
+}
+
+.insight-box h3 {
+  color: var(--accent-1);
+  font-size: 1rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.insight-box p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+/* Verdict */
+.verdict-card {
+  background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(6,182,212,0.05));
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 16px;
+  padding: 32px;
+  margin: 30px 0;
+  text-align: center;
+}
+
+.verdict-card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  color: var(--accent-5);
+  margin-bottom: 12px;
+}
+
+.verdict-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+/* Tier List */
+.tier-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.tier-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  min-height: 56px;
+}
+
+.tier-label {
+  width: 48px;
+  min-width: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: #000;
+  flex-shrink: 0;
+}
+
+.tier-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  flex: 1;
+  background: var(--bg-card);
+  border-radius: 10px;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+}
+
+.tier-item {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.tier-s { background: #ef4444; }
+.tier-a { background: #f59e0b; }
+.tier-b { background: #10b981; }
+.tier-c { background: #06b6d4; }
+.tier-d { background: #6b7280; }
+
+/* Tips */
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.tip-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  transition: all 0.3s;
+}
+
+.tip-card:hover {
+  border-color: var(--accent-2);
+  transform: translateY(-2px);
+}
+
+.tip-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--accent-2);
+  opacity: 0.4;
+  margin-bottom: 8px;
+}
+
+.tip-card h4 {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.tip-card p {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .framework-grid { grid-template-columns: 1fr; }
+  .tier-row { flex-direction: column; }
+  .tier-label { width: 100%; min-height: 36px; }
+  .compare-table { font-size: 0.75rem; }
+  .nav-tab { padding: 8px 14px; font-size: 0.78rem; }
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<div class="container">
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">📊 Deep Analysis — Feb 2026</div>
+  <h1>Prompt Engineering Patterns</h1>
+  <p>วิเคราะห์เชิงลึก Framework และ Pattern ทั้งหมดที่ดีที่สุดในโลก พร้อมคำแนะนำว่าควรใช้แบบไหน เมื่อไหร่ และทำไม</p>
+</div>
+
+<!-- Tabs -->
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="showSection('frameworks')">🏗️ Frameworks ทั้งหมด</button>
+  <button class="nav-tab" onclick="showSection('techniques')">⚡ Techniques ขั้นสูง</button>
+  <button class="nav-tab" onclick="showSection('compare')">📊 เปรียบเทียบ</button>
+  <button class="nav-tab" onclick="showSection('tierlist')">🏆 Tier List</button>
+  <button class="nav-tab" onclick="showSection('ultimate')">💎 Ultimate Prompt</button>
+  <button class="nav-tab" onclick="showSection('tips')">💡 Pro Tips</button>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 1: FRAMEWORKS -->
+<!-- ============================================ -->
+<div id="frameworks" class="section active">
+  <h2 class="section-title">Prompt Frameworks ที่ดีที่สุดในโลก</h2>
+  <p class="section-subtitle">รวม 12 frameworks จากงานวิจัยและบริษัท AI ชั้นนำ พร้อมวิเคราะห์จุดแข็ง-จุดอ่อน</p>
+
+  <div class="framework-grid">
+
+    <!-- COSTAR -->
+    <div class="fw-card" style="--card-accent: #6366f1;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(99,102,241,0.15); color: #6366f1;">🌟</div>
+        <div>
+          <div class="fw-name">COSTAR</div>
+          <div class="fw-acronym">Context · Objective · Style · Tone · Audience · Response</div>
+        </div>
+      </div>
+      <div class="fw-desc">ชนะการแข่งขัน GPT-4 Prompt Engineering ที่สิงคโปร์ สร้างโดย Sheila Teo ถือเป็น framework ที่ครอบคลุมที่สุดสำหรับงาน content และ communication</div>
+      <div class="fw-components">
+        <span class="fw-comp">Context</span>
+        <span class="fw-comp">Objective</span>
+        <span class="fw-comp">Style</span>
+        <span class="fw-comp">Tone</span>
+        <span class="fw-comp">Audience</span>
+        <span class="fw-comp">Response</span>
+      </div>
+      <div class="fw-meta">
+        <div class="fw-meta-item">เหมาะกับ: <span>Content, Marketing, Communication</span></div>
+        <div class="fw-meta-item">ความซับซ้อน: <span>กลาง-สูง</span></div>
+      </div>
+    </div>
+
+    <!-- RISEN -->
+    <div class="fw-card" style="--card-accent: #8b5cf6;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(139,92,246,0.15); color: #8b5cf6;">🚀</div>
+        <div>
+          <div class="fw-name">RISEN</div>
+          <div class="fw-acronym">Role · Instructions · Steps · Expectation · Narrowing</div>
+        </div>
+      </div>
+      <div class="fw-desc">Framework ที่เน้นการแบ่งงานเป็นขั้นตอนชัดเจน มี Narrowing/Novelty เพิ่มความแม่นยำหรือสร้างสรรค์ได้ตามต้องการ เหมาะกับงานซับซ้อนที่ต้องการผลลัพธ์เฉพาะเจาะจง</div>
+      <div class="fw-components">
+        <span class="fw-comp">Role</span>
+        <span class="fw-comp">Instructions</span>
+        <span class="fw-comp">Steps</span>
+        <span class="fw-comp">Expectation</span>
+        <span class="fw-comp">Narrowing</span>
+      </div>
+      <div class="fw-meta">
+        <div class="fw-meta-item">เหมาะกับ: <span>Complex Tasks, Research, Dev</span></div>
+        <div class="fw-meta-item">ความซับซ้อน: <span>สูง</span></div>
+      </div>
+    </div>
+
+    <!-- CRISPE -->
+    <div class="fw-card" style="--card-accent: #ec4899;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(236,72,153,0.15); color: #ec4899;">🔬</div>
+        <div>
+          <div class="fw-name">CRISPE</div>
+          <div class="fw-acronym">Capacity · Role · Insight · Statement · Personality · Experiment</div>
+        </div>
+      </div>
+      <div class="fw-desc">พัฒนาโดย OpenAI เป็น internal framework ที่เน้นการ balance ระหว่างความคิดเชิงวิเคราะห์กับการทดลองสำรวจ มี Experiment component ที่ไม่เหมือนใคร</div>
+      <div class="fw-components">
+        <span class="fw-comp">Capacity</span>
+        <span class="fw-comp">Role</span>
+        <span class="fw-comp">Insight</span>
+        <span class="fw-comp">Statement</span>
+        <span class="fw-comp">Personality</span>
+        <span class="fw-comp">Experiment</span>
+      </div>
+      <div class="fw-meta">
+        <div class="fw-meta-item">เหมาะกับ: <span>Strategy, Analysis, Creative</span></div>
+        <div class="fw-meta-item">ความซับซ้อน: <span>สูง</span></div>
+      </div>
+    </div>
+
+    <!-- XML Tags (Anthropic) -->
+    <div class="fw-card" style="--card-accent: #10b981;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(16,185,129,0.15); color: #10b981;">🏷️</div>
+        <div>
+          <div class="fw-name">XML Tags (Anthropic Official)</div>
+          <div class="fw-acronym">แบบของคุณ — Anthropic แนะนำอย่างเป็นทางการ</div>
+        </div>
+      </div>
+      <div class="fw-desc">Anthropic ใช้ XML tags ในการ train Claude โดยตรง จึงเป็น pattern ที่ Claude เข้าใจได้ดีที่สุด ยืดหยุ่นสูง ปรับ tag ได้ตามต้องการ ใช้ได้ทั้ง system prompt และ user prompt</div>
+      <div class="fw-components">
+        <span class="fw-comp">&lt;role&gt;</span>
+        <span class="fw-comp">&lt;context&gt;</span>
+        <span class="fw-comp">&lt;task&gt;</span>
+        <span class="fw-comp">&lt;example&gt;</span>
+        <span class="fw-comp">&lt;output&gt;</span>
+        <span class="fw-comp">&lt;guidelines&gt;</span>
+      </div>
+      <div class="fw-meta">
+        <div class="fw-meta-item">เหมาะกับ: <span>Claude ทุกรูปแบบ (Best match!)</span></div>
+        <div class="fw-meta-item">ความซับซ้อน: <span>ปรับได้</span></div>
+      </div>
+    </div>
+
+    <!-- RTF -->
+    <div class="fw-card" style="--card-accent: #f59e0b;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(245,158,11,0.15); color: #f59e0b;">⚡</div>
+        <div>
+          <div class="fw-name">RTF</div>
+          <div class="fw-acronym">Role · Task · Format</div>
+        </div>
+      </div>
+      <div class="fw-desc">Framework ที่เรียบง่ายที่สุด เหมาะสำหรับงานเร็วๆ ที่ไม่ซับซ้อน ใช้แค่ 3 องค์ประกอบ เขียนเร็ว ได้ผลดี สำหรับงาน routine ทั่วไป</div>
+      <div class="fw-components">
+        <span class="fw-comp">Role</span>
+        <span class="fw-comp">Task</span>
+        <span class="fw-comp">Format</span>
+      </div>
+      <div class="fw-meta">
+        <div class="fw-meta-item">เหมาะกับ: <span>Quick tasks, Simple requests</span></div>
+        <div class="fw-meta-item">ความซับซ้อน: <span>ต่ำ</span></div>
+      </div>
+    </div>
+
+    <!-- APE -->
+    <div class="fw-card" style="--card-accent: #06b6d4;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(6,182,212,0.15); color: #06b6d4;">🎯</div>
+        <div>
+          <div class="fw-name">APE</div>
+          <div class="fw-acronym">Action · Purpose · Expectation</div>
+        </div>
+      </div>
+      <div class="fw-desc">เน้นการบอก "ทำไม" (Purpose) นอกเหนือจาก "ทำอะไร" ทำให้ AI เข้าใจเจตนาลึกขึ้น เหมาะกับ brainstorming และ content ideation ที่ต้องการความเข้าใจ context</div>
+      <div class="fw-components">
+        <span class="fw-comp">Action</span>
+        <span class="fw-comp">Purpose</span>
+        <span class="fw-comp">Expectation</span>
+      </div>
+      <div class="fw-meta">
+        <div class="fw-meta-item">เหมาะกับ: <span>Brainstorm, Ideation, Marketing</span></div>
+        <div class="fw-meta-item">ความซับซ้อน: <span>ต่ำ-กลาง</span></div>
+      </div>
+    </div>
+
+    <!-- PECRA -->
+    <div class="fw-card" style="--card-accent: #f43f5e;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(244,63,94,0.15); color: #f43f5e;">📋</div>
+        <div>
+          <div class="fw-name">PECRA</div>
+          <div class="fw-acronym">Purpose · Expectation · Context · Request · Action</div>
+        </div>
+      </div>
+      <div class="fw-desc">เริ่มจาก Purpose ก่อนเสมอ ทำให้ทุก component ที่ตามมาถูก align กับเป้าหมาย เหมาะกับงาน business ที่ต้องการ output ที่ตรงประเด็น</div>
+      <div class="fw-components">
+        <span class="fw-comp">Purpose</span>
+        <span class="fw-comp">Expectation</span>
+        <span class="fw-comp">Context</span>
+        <span class="fw-comp">Request</span>
+        <span class="fw-comp">Action</span>
+      </div>
+      <div class="fw-meta">
+        <div class="fw-meta-item">เหมาะกับ: <span>Business writing, Reports</span></div>
+        <div class="fw-meta-item">ความซับซ้อน: <span>กลาง</span></div>
+      </div>
+    </div>
+
+    <!-- TAG -->
+    <div class="fw-card" style="--card-accent: #a78bfa;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(167,139,250,0.15); color: #a78bfa;">🏷️</div>
+        <div>
+          <div class="fw-name">TAG</div>
+          <div class="fw-acronym">Task · Action · Goal</div>
+        </div>
+      </div>
+      <div class="fw-desc">คล้าย RTF แต่เน้น Goal เป็นหลัก ทำให้ output มุ่งสู่เป้าหมายมากกว่าแค่ทำตามคำสั่ง เรียบง่ายแต่ทรงพลัง</div>
+      <div class="fw-components">
+        <span class="fw-comp">Task</span>
+        <span class="fw-comp">Action</span>
+        <span class="fw-comp">Goal</span>
+      </div>
+      <div class="fw-meta">
+        <div class="fw-meta-item">เหมาะกับ: <span>Goal-oriented tasks</span></div>
+        <div class="fw-meta-item">ความซับซ้อน: <span>ต่ำ</span></div>
+      </div>
+    </div>
+
+    <!-- OSCAR -->
+    <div class="fw-card" style="--card-accent: #14b8a6;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(20,184,166,0.15); color: #14b8a6;">🎬</div>
+        <div>
+          <div class="fw-name">OSCAR</div>
+          <div class="fw-acronym">Objective · Situation · Constraints · Action · Result</div>
+        </div>
+      </div>
+      <div class="fw-desc">มี Constraints เป็น component หลัก ทำให้ control output ได้แม่นยำ เหมาะกับงานที่มีข้อจำกัดชัดเจน เช่น word count, format, หรือ compliance</div>
+      <div class="fw-components">
+        <span class="fw-comp">Objective</span>
+        <span class="fw-comp">Situation</span>
+        <span class="fw-comp">Constraints</span>
+        <span class="fw-comp">Action</span>
+        <span class="fw-comp">Result</span>
+      </div>
+      <div class="fw-meta">
+        <div class="fw-meta-item">เหมาะกับ: <span>Constrained tasks, Compliance</span></div>
+        <div class="fw-meta-item">ความซับซ้อน: <span>กลาง</span></div>
+      </div>
+    </div>
+
+    <!-- GOLET -->
+    <div class="fw-card" style="--card-accent: #eab308;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(234,179,8,0.15); color: #eab308;">📐</div>
+        <div>
+          <div class="fw-name">GOLET (Prompt Builder)</div>
+          <div class="fw-acronym">Goal · Output · Limits · Evaluation · Next</div>
+        </div>
+      </div>
+      <div class="fw-desc">Framework สมัยใหม่จาก PromptBuilder.cc ที่เน้น Evaluation criteria และ Next steps เป็น component หลัก ช่วยให้ AI ตรวจสอบตัวเองและเสนอทางเลือก</div>
+      <div class="fw-components">
+        <span class="fw-comp">Goal</span>
+        <span class="fw-comp">Output</span>
+        <span class="fw-comp">Limits</span>
+        <span class="fw-comp">Evaluation</span>
+        <span class="fw-comp">Next</span>
+      </div>
+      <div class="fw-meta">
+        <div class="fw-meta-item">เหมาะกับ: <span>Production prompts, QA</span></div>
+        <div class="fw-meta-item">ความซับซ้อน: <span>กลาง-สูง</span></div>
+      </div>
+    </div>
+
+    <!-- Anthropic Contract -->
+    <div class="fw-card" style="--card-accent: #22d3ee;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(34,211,238,0.15); color: #22d3ee;">📜</div>
+        <div>
+          <div class="fw-name">Contract Pattern (Anthropic 2026)</div>
+          <div class="fw-acronym">You are · Goal · Constraints · If unsure · Output format</div>
+        </div>
+      </div>
+      <div class="fw-desc">Anthropic แนะนำให้เขียน system prompt เหมือน "สัญญาสั้นๆ" กระชับ ชัดเจน ตรวจสอบได้ เน้น success criteria มากกว่า instruction ยาวๆ</div>
+      <div class="fw-components">
+        <span class="fw-comp">You are</span>
+        <span class="fw-comp">Goal</span>
+        <span class="fw-comp">Constraints</span>
+        <span class="fw-comp">Uncertainty rule</span>
+        <span class="fw-comp">Output format</span>
+      </div>
+      <div class="fw-meta">
+        <div class="fw-meta-item">เหมาะกับ: <span>Claude API, System prompts</span></div>
+        <div class="fw-meta-item">ความซับซ้อน: <span>กลาง</span></div>
+      </div>
+    </div>
+
+    <!-- 4-Block -->
+    <div class="fw-card" style="--card-accent: #fb923c;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(251,146,60,0.15); color: #fb923c;">🧱</div>
+        <div>
+          <div class="fw-name">4-Block Pattern</div>
+          <div class="fw-acronym">Instructions · Context · Task · Output Format</div>
+        </div>
+      </div>
+      <div class="fw-desc">Pattern พื้นฐานที่นักพัฒนา AI ส่วนใหญ่ใช้กัน แยก 4 ส่วนชัดเจน ไม่มี overhead ที่ไม่จำเป็น ใช้ได้กับทุก LLM</div>
+      <div class="fw-components">
+        <span class="fw-comp">Instructions</span>
+        <span class="fw-comp">Context</span>
+        <span class="fw-comp">Task</span>
+        <span class="fw-comp">Output Format</span>
+      </div>
+      <div class="fw-meta">
+        <div class="fw-meta-item">เหมาะกับ: <span>ทุกงาน, Universal</span></div>
+        <div class="fw-meta-item">ความซับซ้อน: <span>ต่ำ-กลาง</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 2: TECHNIQUES -->
+<!-- ============================================ -->
+<div id="techniques" class="section">
+  <h2 class="section-title">Advanced Prompting Techniques</h2>
+  <p class="section-subtitle">เทคนิคขั้นสูงที่สามารถผสมร่วมกับ Framework ใดก็ได้</p>
+
+  <div class="framework-grid">
+
+    <div class="fw-card" style="--card-accent: #ef4444;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(239,68,68,0.15); color: #ef4444;">🧠</div>
+        <div><div class="fw-name">Chain of Thought (CoT)</div></div>
+      </div>
+      <div class="fw-desc">บังคับให้ AI "คิดออกเสียง" ทีละขั้น ก่อนให้คำตอบสุดท้าย ลด error ได้อย่างมากในงานที่ต้องใช้ logic งานวิจัยจาก Google พิสูจน์ว่าเพิ่มความแม่นยำ 30-50% ในงานคำนวณ</div>
+      <div class="code-block"><div class="code-label">ตัวอย่าง</div><pre><span class="comment">คิดทีละขั้นตอนก่อนตอบ:</span>
+ขั้น 1: วิเคราะห์โจทย์
+ขั้น 2: ระบุข้อมูลที่เกี่ยวข้อง
+ขั้น 3: คำนวณ/วิเคราะห์
+ขั้น 4: สรุปคำตอบ</pre></div>
+    </div>
+
+    <div class="fw-card" style="--card-accent: #8b5cf6;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(139,92,246,0.15); color: #8b5cf6;">🌳</div>
+        <div><div class="fw-name">Tree of Thought (ToT)</div></div>
+      </div>
+      <div class="fw-desc">ให้ AI คิดหลายทางพร้อมกัน ประเมินแต่ละทาง แล้วเลือกทางที่ดีที่สุด เหมือนการเล่นหมากรุกที่ต้องคิดล่วงหน้าหลายตา เหมาะกับปัญหาที่มีหลายคำตอบ</div>
+      <div class="code-block"><div class="code-label">ตัวอย่าง</div><pre><span class="comment">เสนอ 3 แนวทางแก้ปัญหา</span>
+<span class="comment">แต่ละทางให้ประเมินข้อดี-ข้อเสีย</span>
+<span class="comment">เลือกทางที่ดีที่สุดพร้อมเหตุผล</span></pre></div>
+    </div>
+
+    <div class="fw-card" style="--card-accent: #10b981;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(16,185,129,0.15); color: #10b981;">🔄</div>
+        <div><div class="fw-name">Self-Consistency</div></div>
+      </div>
+      <div class="fw-desc">สร้างหลาย reasoning paths แล้วเลือกคำตอบที่ consistent ที่สุด ลด hallucination ได้อย่างมาก เหมาะกับงาน arithmetic, logic, และ common sense reasoning</div>
+      <div class="code-block"><div class="code-label">ตัวอย่าง</div><pre><span class="comment">ตอบคำถามนี้ 3 ครั้งด้วยวิธีต่างกัน</span>
+<span class="comment">เปรียบเทียบคำตอบทั้ง 3</span>
+<span class="comment">เลือกคำตอบที่ปรากฏบ่อยที่สุด</span></pre></div>
+    </div>
+
+    <div class="fw-card" style="--card-accent: #f59e0b;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(245,158,11,0.15); color: #f59e0b;">🔁</div>
+        <div><div class="fw-name">ReAct (Reasoning + Acting)</div></div>
+      </div>
+      <div class="fw-desc">สลับระหว่าง Thought → Action → Observation วนซ้ำจนได้คำตอบ เป็นเทคนิคหลักของ AI Agents ทั้งหลาย ทำให้ AI วางแผนและปรับตัวได้ระหว่างทำงาน</div>
+      <div class="code-block"><div class="code-label">ตัวอย่าง</div><pre><span class="keyword">Thought:</span> ฉันต้องหาข้อมูลเรื่อง X
+<span class="keyword">Action:</span> ค้นหาข้อมูล X
+<span class="keyword">Observation:</span> พบว่า X คือ...
+<span class="keyword">Thought:</span> ต้องวิเคราะห์ต่อ...
+<span class="keyword">Final Answer:</span> ...</pre></div>
+    </div>
+
+    <div class="fw-card" style="--card-accent: #ec4899;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(236,72,153,0.15); color: #ec4899;">🪞</div>
+        <div><div class="fw-name">Iterative Refinement</div></div>
+      </div>
+      <div class="fw-desc">ให้ AI สร้าง → วิจารณ์ตัวเอง → ปรับปรุง วนจนพอใจ เหมือนกระบวนการ editing ของนักเขียน ช่วยให้ output มีคุณภาพสูงขึ้นอย่างเห็นได้ชัด</div>
+      <div class="code-block"><div class="code-label">ตัวอย่าง</div><pre><span class="comment">Draft 1:</span> เขียน draft แรก
+<span class="comment">Review:</span> วิจารณ์จุดอ่อนของ draft
+<span class="comment">Draft 2:</span> เขียนใหม่โดยแก้จุดอ่อน
+<span class="comment">Final:</span> ตรวจสอบครั้งสุดท้าย</pre></div>
+    </div>
+
+    <div class="fw-card" style="--card-accent: #06b6d4;">
+      <div class="fw-header">
+        <div class="fw-icon" style="background: rgba(6,182,212,0.15); color: #06b6d4;">🎭</div>
+        <div><div class="fw-name">Meta Prompting</div></div>
+      </div>
+      <div class="fw-desc">ให้ AI เขียน prompt ให้ตัวเอง! บอก AI ว่าต้องการอะไร แล้วให้มันออกแบบ prompt ที่ดีที่สุดกลับมา ประหยัด token และลด bias จาก few-shot examples</div>
+      <div class="code-block"><div class="code-label">ตัวอย่าง</div><pre><span class="comment">คุณคือ prompt engineer</span>
+<span class="comment">ออกแบบ prompt ที่ดีที่สุดสำหรับ</span>
+<span class="comment">งาน [X] โดยใช้เทคนิคที่เหมาะสม</span></pre></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 3: COMPARISON -->
+<!-- ============================================ -->
+<div id="compare" class="section">
+  <h2 class="section-title">เปรียบเทียบ Framework</h2>
+  <p class="section-subtitle">ตารางเปรียบเทียบทุกมิติเพื่อเลือก framework ที่เหมาะสมที่สุด</p>
+
+  <div class="compare-wrapper">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Framework</th>
+          <th>Components</th>
+          <th>Claude</th>
+          <th>ChatGPT</th>
+          <th>ความยืดหยุ่น</th>
+          <th>เหมาะกับ</th>
+          <th>จุดเด่น</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>XML Tags</strong></td>
+          <td>6-8</td>
+          <td><span class="badge-best">★★★</span></td>
+          <td><span class="badge-good">★★</span></td>
+          <td><span class="badge-best">สูงมาก</span></td>
+          <td>ทุกงาน</td>
+          <td>Native กับ Claude, ปรับ tag ได้อิสระ</td>
+        </tr>
+        <tr>
+          <td><strong>COSTAR</strong></td>
+          <td>6</td>
+          <td><span class="badge-good">★★</span></td>
+          <td><span class="badge-best">★★★</span></td>
+          <td><span class="badge-good">กลาง</span></td>
+          <td>Content</td>
+          <td>ชนะ competition, ครอบคลุมด้าน communication</td>
+        </tr>
+        <tr>
+          <td><strong>RISEN</strong></td>
+          <td>5</td>
+          <td><span class="badge-good">★★</span></td>
+          <td><span class="badge-best">★★★</span></td>
+          <td><span class="badge-good">กลาง</span></td>
+          <td>Complex tasks</td>
+          <td>มี Steps + Narrowing ที่ไม่เหมือนใคร</td>
+        </tr>
+        <tr>
+          <td><strong>CRISPE</strong></td>
+          <td>6</td>
+          <td><span class="badge-good">★★</span></td>
+          <td><span class="badge-good">★★</span></td>
+          <td><span class="badge-good">กลาง</span></td>
+          <td>Strategy</td>
+          <td>มี Experiment component สำหรับ iterate</td>
+        </tr>
+        <tr>
+          <td><strong>Contract</strong></td>
+          <td>5</td>
+          <td><span class="badge-best">★★★</span></td>
+          <td><span class="badge-ok">★</span></td>
+          <td><span class="badge-good">กลาง</span></td>
+          <td>API/System</td>
+          <td>Anthropic แนะนำ, กระชับ, ตรวจสอบได้</td>
+        </tr>
+        <tr>
+          <td><strong>RTF</strong></td>
+          <td>3</td>
+          <td><span class="badge-good">★★</span></td>
+          <td><span class="badge-good">★★</span></td>
+          <td><span class="badge-ok">ต่ำ</span></td>
+          <td>Quick tasks</td>
+          <td>เร็ว เรียบง่าย ได้ผลทันที</td>
+        </tr>
+        <tr>
+          <td><strong>GOLET</strong></td>
+          <td>5</td>
+          <td><span class="badge-good">★★</span></td>
+          <td><span class="badge-good">★★</span></td>
+          <td><span class="badge-best">สูง</span></td>
+          <td>Production</td>
+          <td>มี Evaluation criteria ในตัว</td>
+        </tr>
+        <tr>
+          <td><strong>4-Block</strong></td>
+          <td>4</td>
+          <td><span class="badge-good">★★</span></td>
+          <td><span class="badge-good">★★</span></td>
+          <td><span class="badge-good">กลาง</span></td>
+          <td>Universal</td>
+          <td>สมดุลระหว่างความง่ายกับความครบ</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight-box">
+    <h3>💡 Key Insight จากการวิเคราะห์</h3>
+    <p>จากงานวิจัยและ best practices ของ Anthropic ปี 2025-2026 พบว่า <strong>ไม่มี framework ใดที่ดีที่สุดสำหรับทุกงาน</strong> แต่สำหรับ Claude โดยเฉพาะ XML Tags pattern (แบบของคุณ) ให้ผลดีที่สุดเพราะ Claude ถูก train มากับ XML tags โดยตรง Anthropic's Prompt Doctor (Zack Witten) ยืนยันว่า XML tags ช่วยให้ Claude แยกแยะส่วนต่างๆ ของ prompt ได้ดีกว่า plain text อย่างเห็นได้ชัด</p>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 4: TIER LIST -->
+<!-- ============================================ -->
+<div id="tierlist" class="section">
+  <h2 class="section-title">🏆 Tier List — สำหรับ Claude</h2>
+  <p class="section-subtitle">จัดอันดับ patterns/frameworks ตามประสิทธิภาพกับ Claude โดยเฉพาะ</p>
+
+  <div class="tier-list">
+    <div class="tier-row">
+      <div class="tier-label tier-s">S</div>
+      <div class="tier-items">
+        <div class="tier-item">🏷️ XML Tags (ของคุณ)</div>
+        <div class="tier-item">📜 Contract Pattern</div>
+        <div class="tier-item">🧠 CoT + XML</div>
+      </div>
+    </div>
+    <div class="tier-row">
+      <div class="tier-label tier-a">A</div>
+      <div class="tier-items">
+        <div class="tier-item">🌟 COSTAR</div>
+        <div class="tier-item">🚀 RISEN</div>
+        <div class="tier-item">📐 GOLET</div>
+        <div class="tier-item">🔄 Few-Shot + XML</div>
+      </div>
+    </div>
+    <div class="tier-row">
+      <div class="tier-label tier-b">B</div>
+      <div class="tier-items">
+        <div class="tier-item">🔬 CRISPE</div>
+        <div class="tier-item">📋 PECRA</div>
+        <div class="tier-item">🧱 4-Block</div>
+        <div class="tier-item">🎬 OSCAR</div>
+      </div>
+    </div>
+    <div class="tier-row">
+      <div class="tier-label tier-c">C</div>
+      <div class="tier-items">
+        <div class="tier-item">⚡ RTF</div>
+        <div class="tier-item">🏷️ TAG</div>
+        <div class="tier-item">🎯 APE</div>
+        <div class="tier-item">📝 Markdown</div>
+      </div>
+    </div>
+    <div class="tier-row">
+      <div class="tier-label tier-d">D</div>
+      <div class="tier-items">
+        <div class="tier-item">💬 Zero-Shot (ถามตรงๆ)</div>
+        <div class="tier-item">📄 Plain Text ยาวๆ</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <h3>⚠️ ทำไม XML Tags อยู่ Tier S?</h3>
+    <p>เหตุผล 3 ข้อ: (1) Claude ถูก train ด้วย XML tags ในข้อมูลฝึกโดยตรง — Anthropic ใช้ XML tags อย่างหนักใน system prompt ของตัวเอง (2) XML tags ยืดหยุ่นที่สุด — สร้าง tag อะไรก็ได้ ไม่จำกัดตาม acronym (3) ผลลัพธ์จากการทดสอบจริง — prompt ที่ใช้ XML tags บน Claude ให้ output ที่ structured และ accurate กว่า plain text อย่างสม่ำเสมอ</p>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 5: ULTIMATE PROMPT -->
+<!-- ============================================ -->
+<div id="ultimate" class="section">
+  <h2 class="section-title">💎 Ultimate Prompt Pattern</h2>
+  <p class="section-subtitle">ผสมจุดเด่นของทุก framework เข้าด้วยกัน — ดีที่สุดเท่าที่จะเป็นไปได้</p>
+
+  <div class="insight-box">
+    <h3>🔬 หลักการออกแบบ</h3>
+    <p>Pattern นี้ผสม: XML Tags (Anthropic) + COSTAR (Tone/Audience) + RISEN (Steps/Narrowing) + GOLET (Evaluation) + CoT (Thinking) + Few-Shot (Examples) + Contract (Success Criteria) เข้าด้วยกัน ได้ pattern ที่ทรงพลังที่สุดสำหรับ Claude</p>
+  </div>
+
+  <div class="code-block">
+    <div class="code-label">THE ULTIMATE PROMPT PATTERN</div>
+    <pre>
+<span class="xml-tag">&lt;role&gt;</span>
+คุณคือ [บทบาท] ที่มีความเชี่ยวชาญใน [สาขา]
+ระดับ: [junior/senior/expert]
+<span class="xml-tag">&lt;/role&gt;</span>
+
+<span class="xml-tag">&lt;context&gt;</span>
+<span class="comment">&lt;!-- Background ทั้งหมดที่ AI ต้องรู้ --&gt;</span>
+สถานการณ์: [อธิบาย background]
+กลุ่มเป้าหมาย: [ใครจะใช้ output นี้]
+ข้อมูลเพิ่มเติม: [ข้อจำกัด, งบประมาณ, timeline]
+<span class="xml-tag">&lt;/context&gt;</span>
+
+<span class="xml-tag">&lt;objective&gt;</span>
+<span class="comment">&lt;!-- เป้าหมายหลัก 1 อย่างที่ชัดเจน --&gt;</span>
+[สิ่งที่ต้องทำ + ทำไม + สำเร็จแล้วจะเป็นอย่างไร]
+<span class="xml-tag">&lt;/objective&gt;</span>
+
+<span class="xml-tag">&lt;task&gt;</span>
+<span class="comment">&lt;!-- แบ่งเป็นขั้นตอนถ้าซับซ้อน --&gt;</span>
+1. [ขั้นตอนที่ 1]
+2. [ขั้นตอนที่ 2]
+3. [ขั้นตอนที่ 3]
+<span class="xml-tag">&lt;/task&gt;</span>
+
+<span class="xml-tag">&lt;examples&gt;</span>
+<span class="comment">&lt;!-- 2-3 ตัวอย่างของ input → output ที่ต้องการ --&gt;</span>
+<span class="xml-tag">&lt;example&gt;</span>
+  Input: [ตัวอย่าง input]
+  Output: [ตัวอย่าง output ที่ต้องการ]
+<span class="xml-tag">&lt;/example&gt;</span>
+<span class="xml-tag">&lt;example&gt;</span>
+  Input: [ตัวอย่าง input อีกแบบ]
+  Output: [ตัวอย่าง output อีกแบบ]
+<span class="xml-tag">&lt;/example&gt;</span>
+<span class="xml-tag">&lt;/examples&gt;</span>
+
+<span class="xml-tag">&lt;input&gt;</span>
+[ข้อมูลจริงที่ให้ทำงาน]
+<span class="xml-tag">&lt;/input&gt;</span>
+
+<span class="xml-tag">&lt;output_format&gt;</span>
+รูปแบบ: [JSON/Markdown/Table/Prose/Code]
+ความยาว: [กี่คำ/กี่บรรทัด/กี่หน้า]
+ภาษา: [ไทย/อังกฤษ/ทั้งสอง]
+โทน: [formal/casual/technical]
+<span class="xml-tag">&lt;/output_format&gt;</span>
+
+<span class="xml-tag">&lt;guidelines&gt;</span>
+<span class="comment">&lt;!-- ข้อควรทำ --&gt;</span>
+DO:
+- [สิ่งที่ต้องทำ]
+- [สิ่งที่ต้องทำ]
+
+<span class="comment">&lt;!-- ข้อห้าม --&gt;</span>
+DON'T:
+- [สิ่งที่ห้ามทำ]
+- [สิ่งที่ห้ามทำ]
+<span class="xml-tag">&lt;/guidelines&gt;</span>
+
+<span class="xml-tag">&lt;thinking&gt;</span>
+<span class="comment">&lt;!-- ถ้าต้องใช้ logic ให้เพิ่ม --&gt;</span>
+คิดทีละขั้นตอนก่อนตอบ แสดงกระบวนการคิดอย่างชัดเจน
+<span class="xml-tag">&lt;/thinking&gt;</span>
+
+<span class="xml-tag">&lt;evaluation&gt;</span>
+<span class="comment">&lt;!-- เกณฑ์ตรวจสอบ output --&gt;</span>
+ตรวจสอบ output ของคุณว่า:
+- [ ] ตรงตาม objective หรือไม่?
+- [ ] ครบตาม task ทุกข้อหรือไม่?
+- [ ] อยู่ในรูปแบบที่กำหนดหรือไม่?
+ถ้าไม่ผ่านข้อใด ให้แก้ไขก่อนส่ง
+<span class="xml-tag">&lt;/evaluation&gt;</span></pre>
+  </div>
+
+  <div class="insight-box">
+    <h3>🎯 เมื่อไหร่ควรใช้ทั้งหมด vs. บางส่วน?</h3>
+    <p><strong>งานง่าย (ถามตอบ, แปล, สรุป):</strong> ใช้แค่ role + task + output_format พอ<br>
+    <strong>งานปานกลาง (เขียน content, วิเคราะห์):</strong> เพิ่ม context + examples + guidelines<br>
+    <strong>งานซับซ้อน (coding, research, strategy):</strong> ใช้ทั้งหมด + thinking + evaluation<br>
+    <strong>งาน production (API, system prompt):</strong> ใช้ Contract Pattern แทนได้</p>
+  </div>
+
+  <div class="verdict-card">
+    <h2>🏆 สรุปผลการวิเคราะห์</h2>
+    <p>Pattern ของคุณ (XML Tags) อยู่ใน Tier S สำหรับ Claude และเป็น pattern ที่ Anthropic แนะนำอย่างเป็นทางการ เพียงแค่เพิ่ม &lt;thinking&gt; และ &lt;evaluation&gt; เข้าไป ก็จะกลายเป็น Ultimate Prompt ที่รวมจุดเด่นของทุก framework ไว้ในที่เดียว</p>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 6: PRO TIPS -->
+<!-- ============================================ -->
+<div id="tips" class="section">
+  <h2 class="section-title">💡 Pro Tips จาก Anthropic & Experts</h2>
+  <p class="section-subtitle">เคล็ดลับจาก Anthropic's Prompt Doctor, $50M ARR AI companies, และงานวิจัยล่าสุด</p>
+
+  <div class="tips-grid">
+
+    <div class="tip-card">
+      <div class="tip-num">01</div>
+      <h4>Prompt สั้น ≠ Prompt แย่</h4>
+      <p>Anthropic บอกชัดเจนว่า "Longer prompts are not the goal" — prompt ที่ดีคือ prompt ที่ชัดเจน ไม่ใช่ prompt ที่ยาว</p>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-num">02</div>
+      <h4>Claude จับ Tone จาก Prompt</h4>
+      <p>Claude จะจับสไตล์การเขียนจาก prompt ของคุณ ถ้าอยากได้ output ที่ formal ให้เขียน prompt แบบ formal ด้วย</p>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-num">03</div>
+      <h4>บอกเหตุผล "ทำไม" เสมอ</h4>
+      <p>Claude 4.x ตอบสนองดีมากกับ motivation — อธิบายว่าทำไมถึงต้องทำแบบนี้ จะได้ output ที่ aligned กับเป้าหมายมากขึ้น</p>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-num">04</div>
+      <h4>เฉพาะเจาะจงมากที่สุด</h4>
+      <p>Anthropic's Prompt Doctor: "คิดว่ากำลังคุยกับ intern วันแรก" — ยิ่งเฉพาะเจาะจง ยิ่งลดโอกาสที่ AI จะตีความผิด</p>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-num">05</div>
+      <h4>ใช้ Examples เสมอ</h4>
+      <p>Few-shot examples เป็นเทคนิคที่ powerful ที่สุด ตัวอย่าง 2-3 อันดีกว่าคำอธิบายยาว 10 บรรทัด</p>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-num">06</div>
+      <h4>Version ทุก Prompt</h4>
+      <p>บริษัท AI ที่ทำรายได้ $50M+ ทุกบริษัท version control prompt ของตัวเอง เก็บ log ว่า prompt ไหน work ไม่ work</p>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-num">07</div>
+      <h4>หลีกเลี่ยงคำว่า "think" กับ Opus</h4>
+      <p>Claude Opus 4.5 sensitive กับคำว่า "think" — ใช้ "consider", "evaluate", "analyze" แทน จะได้ผลดีกว่า</p>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-num">08</div>
+      <h4>1 Prompt = 1 Task</h4>
+      <p>Prompt ที่ทำหลายอย่างพร้อมกันมักให้ผลแย่กว่า แบ่งเป็น prompt เล็กๆ หลายอัน test แยกกัน แล้วรวมทีหลัง</p>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-num">09</div>
+      <h4>อย่า code ใน prompt ถ้าไม่จำเป็น</h4>
+      <p>งาน formatting, validation, evaluation ที่ทำใน code ได้ อย่าโยนให้ LLM ทำ — ประหยัด token และ reliable กว่า</p>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-num">10</div>
+      <h4>Iterate เหมือนนักวิทยาศาสตร์</h4>
+      <p>Anthropic เอง: "Prompt engineering is a science" — เปลี่ยนทีละอย่าง, test, เปรียบเทียบ, ทำซ้ำ ไม่มีทางลัด</p>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- Footer -->
+<div class="footer">
+  <p>📊 วิเคราะห์จากแหล่งข้อมูล: Anthropic Official Docs, Prompt Builder, PromptWarrior, Parloa, K2View, Medium Research Articles, arXiv Papers</p>
+  <p style="margin-top:6px;">สร้างโดย Claude Opus 4.6 — กุมภาพันธ์ 2026</p>
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 300, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
