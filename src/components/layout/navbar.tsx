@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,9 @@ export function Navbar() {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border-color)] bg-[var(--bg-dark)]/80 backdrop-blur-xl">
@@ -39,7 +42,7 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="rounded-lg p-2 text-[var(--text-secondary)] hover:bg-[var(--bg-card)]" aria-label="Toggle theme">
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            {mounted ? (theme === "dark" ? <Sun size={18} /> : <Moon size={18} />) : <Sun size={18} />}
           </button>
           <Link href="/login" className="hidden rounded-lg border border-[#6366f1]/30 bg-[#6366f1]/10 px-4 py-2 text-sm text-[#6366f1] hover:bg-[#6366f1]/20 md:block">เข้าสู่ระบบ</Link>
           <button onClick={() => setOpen(!open)} className="rounded-lg p-2 text-[var(--text-secondary)] md:hidden" aria-label="Menu">
