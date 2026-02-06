@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_Thai, JetBrains_Mono, Playfair_Display } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { Providers } from "@/components/providers";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import "./globals.css";
@@ -31,12 +32,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="th" suppressHydrationWarning>
       <body className={`${notoSansThai.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable} font-[family-name:var(--font-noto-sans-thai)] antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <div className="bg-grid" />
-          <Navbar />
-          <main className="relative z-10 min-h-screen">{children}</main>
-          <Footer />
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+            <div className="bg-grid" />
+            <Navbar />
+            <main className="relative z-10 min-h-screen">{children}</main>
+            <Footer />
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );
