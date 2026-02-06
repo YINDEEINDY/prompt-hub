@@ -19,27 +19,23 @@ async function getPrismaClient() {
   }
 }
 
+function createModel(name: string) {
+  const handler = {
+    get(_: any, method: string) {
+      return async (args: any) => {
+        const client = await getPrismaClient();
+        if (!client) throw new Error("Database not configured");
+        return client[name][method](args);
+      };
+    },
+  };
+  return new Proxy({}, handler);
+}
+
 export const prisma = {
-  savedPrompt: {
-    findMany: async (args: any) => {
-      const client = await getPrismaClient();
-      if (!client) throw new Error("Database not configured");
-      return client.savedPrompt.findMany(args);
-    },
-    findUnique: async (args: any) => {
-      const client = await getPrismaClient();
-      if (!client) throw new Error("Database not configured");
-      return client.savedPrompt.findUnique(args);
-    },
-    create: async (args: any) => {
-      const client = await getPrismaClient();
-      if (!client) throw new Error("Database not configured");
-      return client.savedPrompt.create(args);
-    },
-    delete: async (args: any) => {
-      const client = await getPrismaClient();
-      if (!client) throw new Error("Database not configured");
-      return client.savedPrompt.delete(args);
-    },
-  },
+  user: createModel("user") as any,
+  savedPrompt: createModel("savedPrompt") as any,
+  favorite: createModel("favorite") as any,
+  account: createModel("account") as any,
+  session: createModel("session") as any,
 };
