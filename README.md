@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://image.thum.io/get/width/1200/crop/700/https://prompt-hub-weld-tau.vercel.app" alt="Prompt Hub homepage" width="100%" />
+  <img src="https://api.microlink.io/?url=https://prompt-hub-weld-tau.vercel.app&screenshot=true&embed=screenshot.url&meta=false&viewport.width=1280&viewport.height=720" alt="Prompt Hub homepage" width="100%" />
 </p>
 
 ---
