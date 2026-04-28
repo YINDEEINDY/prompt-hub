@@ -9,10 +9,6 @@
   <a href="https://prompt-hub-weld-tau.vercel.app"><b>Live demo →</b></a>
 </p>
 
-<p align="center">
-  <img src="./assets/screenshot.png" alt="Prompt Hub homepage" width="100%" />
-</p>
-
 ---
 
 ## What it is
